@@ -1933,3 +1933,14 @@ body.is-mobile.is-ios .rb-home {
   color: var(--interactive-accent) !important;
 }
 body.is-mobile.is-ios .rb-home svg { width: 22px !important; height: 22px !important; }
+
+/* iOS fix 2 (from a real iPhone screenshot): the WebView's bottom edge
+   already sits above the home indicator, so the pill stands 8px off it,
+   not a full safe-area inset. Same 8px for the home button puts both on
+   one baseline. The pale accent icon was hard to see on white glass:
+   icon in normal text colour, glass lightly tinted with the accent. */
+body.is-mobile.is-ios .rb-home {
+  bottom: 8px !important;
+  color: var(--text-normal) !important;
+  background: color-mix(in srgb, var(--interactive-accent) 30%, color-mix(in srgb, var(--background-primary) 55%, transparent)) !important;
+}
