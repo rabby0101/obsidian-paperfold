@@ -1,0 +1,1903 @@
+/* Paperfold — an Obsidian theme by Sk Fazla Rabby
+   Built on the default theme. Made from the snippets Callouts, Loading,
+   Projects, Recent_files, TaskManager-Mobile, Widget and Theme, kept in
+   the order they used to load. Pairs with the Homepage (Rabby) and
+   Task Manager (Rabby) plugins. */
+
+
+/* ═══════════ Callouts ═══════════ */
+
+.callout[data-callout="job"] {
+    --callout-color: 254 , 153, 0;
+    --callout-icon: lucide-briefcase;
+}
+
+.callout[data-callout="article"] {
+    --callout-color: 81 , 254, 0;
+    --callout-icon: lucide-file-bar-chart;
+}
+
+.callout[data-callout="finance"] {
+    --callout-color: 0 , 186, 254;
+    --callout-icon: lucide-wallet-cards;
+}
+
+.callout[data-callout="personal"] {
+    --callout-color: 255, 134, 215;
+    --callout-icon: lucide-user;
+}
+
+.callout[data-callout="study"]{
+	--callout-color : 255, 128, 128;
+	--callout-icon : lucide-graduation-cap;
+}
+
+.callout[data-callout="lecture"]{
+    --callout-color : 255, 128, 128;
+    --callout-icon : lucide-notebook;
+}
+
+.callout[data-callout="recent"]{
+    --callout-color : 115, 147, 156;
+    --callout-icon : lucide-clock;
+    min-width: 300px;
+}
+
+.callout[data-callout="scratchpad"]{
+    --callout-color : none;
+    --callout-icon : lucide-touchpad;
+}
+
+.callout[data-callout="task"]{
+    --callout-color : none;
+    --callout-icon : circle-check;
+}
+
+/* Remove indentation from embedded notes */
+/* Remove vertical line from embedded sections */
+.markdown-embed::before {
+    display: none !important;
+}
+
+
+/* ═══════════ Loading ═══════════ */
+
+/* ============================================================
+   LOADING — ease content in as it renders
+   Obsidian fires no "everything loaded" event, so instead of
+   waiting on a guess, each piece eases in as it arrives.
+   ============================================================ */
+
+@keyframes ob-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ob-rise-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* --- The note body as a whole ------------------------------ */
+  .markdown-preview-view .markdown-preview-sizer,
+  .markdown-source-view.mod-cm6 .cm-sizer {
+    animation: ob-rise-in 260ms cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+  }
+
+  /* --- Banner: fades in once the image has decoded ----------- */
+  .obsidian-banner .banner-image {
+    animation: ob-fade-in 400ms ease backwards;
+  }
+
+  /* --- Dataview / task blocks resolve after the body --------- */
+  .block-language-dataview,
+  .block-language-dataviewjs,
+  .block-language-task-manager {
+    animation: ob-fade-in 320ms ease 60ms backwards;
+  }
+
+  /* --- Cards stagger in, ~45ms apart -------------------------
+     opacity only: animating transform here would override the
+     hover lift once the animation settles.                     */
+  .widget tbody tr,
+  .recent tbody tr,
+  .project-cards tbody tr {
+    animation: ob-fade-in 300ms ease backwards;
+  }
+
+  .widget tbody tr:nth-child(1),
+  .recent tbody tr:nth-child(1),
+  .project-cards tbody tr:nth-child(1) { animation-delay: 0ms; }
+
+  .widget tbody tr:nth-child(2),
+  .recent tbody tr:nth-child(2),
+  .project-cards tbody tr:nth-child(2) { animation-delay: 45ms; }
+
+  .widget tbody tr:nth-child(3),
+  .recent tbody tr:nth-child(3),
+  .project-cards tbody tr:nth-child(3) { animation-delay: 90ms; }
+
+  .widget tbody tr:nth-child(4),
+  .recent tbody tr:nth-child(4),
+  .project-cards tbody tr:nth-child(4) { animation-delay: 135ms; }
+
+  .widget tbody tr:nth-child(5),
+  .recent tbody tr:nth-child(5),
+  .project-cards tbody tr:nth-child(5) { animation-delay: 180ms; }
+
+  .widget tbody tr:nth-child(6),
+  .recent tbody tr:nth-child(6),
+  .project-cards tbody tr:nth-child(6) { animation-delay: 225ms; }
+
+  /* Past the sixth card everything shares the last delay so a
+     long list never feels like it is dribbling in. */
+  .widget tbody tr:nth-child(n + 7),
+  .recent tbody tr:nth-child(n + 7),
+  .project-cards tbody tr:nth-child(n + 7) { animation-delay: 260ms; }
+
+  /* --- Images inside notes ----------------------------------- */
+  .markdown-rendered img {
+    animation: ob-fade-in 300ms ease backwards;
+  }
+}
+
+
+/* ═══════════ Projects ═══════════ */
+
+/* ============================================================
+   Projects — card grid
+   cssclass: project-cards
+   ============================================================ */
+
+.project-cards {
+  --pc-radius: 14px;
+  --pc-gap: 0.875rem;
+  --pc-pad: 1.125rem;
+  --pc-accent: #6366f1;
+  --pc-done: #10b981;
+}
+
+/* --- Full-width canvas --------------------------------------- */
+.project-cards.markdown-preview-view .markdown-preview-sizer,
+.project-cards.markdown-preview-view .markdown-preview-section,
+.project-cards.markdown-source-view.mod-cm6 .cm-content,
+.project-cards.markdown-source-view.mod-cm6 .cm-line,
+.project-cards.is-readable-line-width .markdown-preview-sizer,
+.project-cards.is-readable-line-width .markdown-preview-section {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.project-cards .block-language-dataviewjs { width: 100%; }
+
+/* --- Section headers ----------------------------------------- */
+.project-cards .callout {
+  margin: 1.5rem 0 0.75rem;
+}
+
+/* --- Grid ---------------------------------------------------- */
+.project-cards table {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-collapse: separate;
+}
+
+.project-cards thead { display: none; }
+
+.project-cards tbody {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--pc-gap);
+  padding: 0 0 1.25rem;
+  width: 100%;
+}
+
+/* --- Card ---------------------------------------------------- */
+.project-cards tbody tr {
+  display: flex;
+  flex-direction: column;
+  min-height: 10.5rem;
+  padding: var(--pc-pad) var(--pc-pad) 0.875rem calc(var(--pc-pad) + 3px);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--pc-radius);
+  background: var(--background-primary-alt);
+  overflow: hidden;
+  position: relative;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.project-cards tbody tr:hover {
+  border-color: color-mix(in srgb, var(--pc-accent) 55%, transparent);
+  background: var(--background-modifier-hover);
+}
+
+/* Left accent rail */
+.project-cards tbody tr::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--pc-accent);
+}
+
+/* Cell reset */
+.project-cards td {
+  display: block;
+  border: none !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+  margin: 0;
+  background: none !important;
+  text-align: left;
+  white-space: normal;
+  font-family: var(--font-interface);
+}
+
+/* --- 1. Title ------------------------------------------------ */
+.project-cards tbody tr > td:nth-child(1) {
+  flex: 0 0 auto;
+}
+
+.project-cards tbody tr > td:nth-child(1) a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.project-cards tbody tr:hover > td:nth-child(1) a {
+  color: var(--text-accent);
+}
+
+/* --- 2. Tags — collapses entirely when there are none -------- */
+.project-cards tbody tr > td:nth-child(2) {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.625rem;
+  max-height: 3.2rem;
+  overflow: hidden;
+}
+
+.project-cards .no-tags { display: none; }
+
+.project-cards tbody tr > td:nth-child(2):has(.no-tags),
+.project-cards tbody tr > td:nth-child(2):empty {
+  display: none;
+}
+
+.project-cards .tag,
+.project-cards .tag a {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--pc-accent) 14%, transparent);
+  color: var(--pc-accent);
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  text-decoration: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.project-cards .tag a span:first-child { display: none; }
+
+/* --- 3. Footer — one divider, pinned to the bottom ----------- */
+.project-cards tbody tr > td:nth-child(3) {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+}
+
+.project-cards .card-footer {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--background-modifier-border) !important;
+  text-align: left;
+}
+
+.project-cards .last-modified,
+.project-cards .task-count,
+.project-cards .tasks-completed,
+.project-cards .duration {
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+/* Date + task count share one baseline row */
+.project-cards .meta-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.project-cards .meta-row .last-modified {
+  flex: 0 0 auto;
+  opacity: 0.85;
+}
+
+.project-cards .meta-row .task-count,
+.project-cards .meta-row .tasks-completed {
+  flex: 0 0 auto;
+}
+
+/* --- Progress ------------------------------------------------ */
+.project-cards .progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.project-cards .progress-bar-container {
+  position: relative;
+  flex: 1 1 auto;
+  height: 4px;
+  background: var(--background-modifier-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.project-cards .progress-bar {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--text-faint);
+  transition: width 300ms ease;
+}
+
+/* A 0% bar should render as nothing at all */
+.project-cards .progress-bar[style*="width: 0%"] { display: none; }
+
+.project-cards .progress-bar.progress-low    { background-color: #f87171; }
+.project-cards .progress-bar.progress-medium { background-color: #f59e0b; }
+.project-cards .progress-bar.progress-high   { background-color: var(--pc-done); }
+
+.project-cards .progress-text {
+  flex: 0 0 auto;
+  min-width: 2.25rem;
+  text-align: right;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* --- Completed section --------------------------------------- */
+.project-cards.completed-projects tbody tr::before,
+.project-cards tbody tr[data-status="completed"]::before {
+  background: var(--pc-done);
+}
+
+.project-cards.completed-projects tbody tr:hover {
+  border-color: color-mix(in srgb, var(--pc-done) 55%, transparent);
+}
+
+.completed-projects .card-footer.completed .completion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.completed-projects .completed-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--pc-done);
+}
+
+/* --- Status badges ------------------------------------------- */
+.project-cards .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.2;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.project-cards .status-badge.completed {
+  background: color-mix(in srgb, var(--pc-done) 14%, transparent);
+  color: var(--pc-done);
+}
+.project-cards .status-badge.completed::before { content: "✓"; }
+
+.project-cards .status-badge.in-progress {
+  background: color-mix(in srgb, var(--pc-accent) 14%, transparent);
+  color: var(--pc-accent);
+}
+.project-cards .status-badge.in-progress::before { content: "◉"; }
+
+.project-cards .status-badge.not-started {
+  background: var(--background-modifier-border);
+  color: var(--text-muted);
+}
+.project-cards .status-badge.not-started::before { content: "◌"; }
+
+/* --- Narrow panes -------------------------------------------- */
+@media (max-width: 700px) {
+  .project-cards tbody { grid-template-columns: 1fr; }
+}
+
+
+/* Craft-Style applies !important cell padding/hover to every table */
+.project-cards tbody tr:hover > td,
+.project-cards tbody tr > td:hover {
+  background: none !important;
+}
+
+
+/* ═══════════ Recent_files ═══════════ */
+
+/* ============================================================
+   Recent Files — card grid
+   cssclass: recent
+   Uniform, full-width, responsive card layout for the
+   dataviewjs table on the "Recent Files" note.
+   ============================================================ */
+
+.recent {
+  --rf-card-h: 16.5rem;
+  --rf-radius: 14px;
+  --rf-gap: 1rem;
+}
+
+/* --- Full-width canvas (override readable line width) ------- */
+.recent.markdown-preview-view .markdown-preview-sizer,
+.recent.markdown-preview-view .markdown-preview-section,
+.recent.markdown-source-view.mod-cm6 .cm-content,
+.recent.markdown-source-view.mod-cm6 .cm-line,
+.recent.is-readable-line-width .markdown-preview-sizer,
+.recent.is-readable-line-width .markdown-preview-section {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.recent .block-language-dataviewjs {
+  width: 100%;
+}
+
+/* --- Grid container ----------------------------------------- */
+.recent table {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-collapse: separate;
+}
+
+.recent thead {
+  display: none;
+}
+
+.recent tbody {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+  gap: var(--rf-gap);
+  padding: 0.25rem 0 1.5rem;
+  width: 100%;
+}
+
+/* --- Card ---------------------------------------------------- */
+.recent tbody tr {
+  display: flex;
+  flex-direction: column;
+  height: var(--rf-card-h);
+  padding: 1rem 1.125rem 0.875rem;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--rf-radius);
+  background-color: var(--background-primary-alt);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.recent tbody tr:hover {
+  transform: translateY(-2px);
+  border-color: var(--interactive-accent);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Reset every cell — the card does the spacing, not the cells */
+.recent td {
+  display: block;
+  border: none !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+  background: none !important;
+  margin: 0;
+  text-align: left;
+  white-space: normal;
+  background: none;
+  font-family: var(--font-interface);
+}
+
+/* --- 1. Title ------------------------------------------------ */
+.recent tbody tr > td:nth-child(1) {
+  flex: 0 0 auto;
+  padding-bottom: 0.625rem !important;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--background-modifier-border) !important;
+}
+
+.recent tbody tr > td:nth-child(1) a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.975rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.recent tbody tr:hover > td:nth-child(1) a {
+  color: var(--text-accent);
+}
+
+/* --- 2. Preview ---------------------------------------------- */
+.recent tbody tr > td:nth-child(2) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* Flatten all markdown inside the preview to one uniform voice */
+.recent tbody tr > td:nth-child(2) * {
+  display: inline;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  font-family: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  text-decoration: none !important;
+  list-style: none !important;
+}
+
+/* Give block elements a space so words don't run together */
+.recent tbody tr > td:nth-child(2) p::after,
+.recent tbody tr > td:nth-child(2) h1::after,
+.recent tbody tr > td:nth-child(2) h2::after,
+.recent tbody tr > td:nth-child(2) h3::after,
+.recent tbody tr > td:nth-child(2) h4::after,
+.recent tbody tr > td:nth-child(2) h5::after,
+.recent tbody tr > td:nth-child(2) h6::after,
+.recent tbody tr > td:nth-child(2) li::after,
+.recent tbody tr > td:nth-child(2) blockquote::after {
+  content: " ";
+}
+
+/* Drop noisy embeds from the preview */
+.recent tbody tr > td:nth-child(2) img,
+.recent tbody tr > td:nth-child(2) svg,
+.recent tbody tr > td:nth-child(2) iframe,
+.recent tbody tr > td:nth-child(2) table,
+.recent tbody tr > td:nth-child(2) hr,
+.recent tbody tr > td:nth-child(2) .internal-embed,
+.recent tbody tr > td:nth-child(2) .callout-icon,
+.recent tbody tr > td:nth-child(2) .frontmatter,
+.recent tbody tr > td:nth-child(2) .metadata-container,
+.recent tbody tr > td:nth-child(2) .copy-code-button,
+.recent tbody tr > td:nth-child(2) .checkbox-container {
+  display: none !important;
+}
+
+/* Fade the last preview line into the card */
+.recent tbody tr::after {
+  content: "";
+  position: absolute;
+  left: 1.125rem;
+  right: 1.125rem;
+  bottom: 2.75rem;
+  height: 1.5rem;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--background-primary-alt)
+  );
+}
+
+/* --- 3. Date footer ------------------------------------------ */
+.recent tbody tr > td:nth-child(3) {
+  flex: 0 0 auto;
+  margin-top: 0.75rem;
+  padding-top: 0.625rem !important;
+  border-top: 1px solid var(--background-modifier-border) !important;
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--text-faint);
+}
+
+/* --- Narrow panes -------------------------------------------- */
+@media (max-width: 700px) {
+  .recent tbody {
+    grid-template-columns: 1fr;
+  }
+  .recent {
+    --rf-card-h: 14.5rem;
+  }
+}
+
+
+/* Craft-Style applies !important cell padding/hover to every table */
+.recent tbody tr:hover > td,
+.recent tbody tr > td:hover {
+  background: none !important;
+}
+
+
+/* ═══════════ TaskManager-Mobile ═══════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   Task Manager — bigger, always-visible action buttons on touch
+   Snippet, not an edit to the plugin: survives plugin updates.
+
+   Problems this fixes:
+   1. .tm-action-btn is 27x27px with a 13px icon — far below the
+      ~44px minimum comfortable touch target.
+   2. .tm-task-actions defaults to opacity:0 and is only revealed
+      by :hover. Touchscreens have no hover, so on a phone the
+      buttons are invisible or flicker in on a stray touch.
+      The plugin's own @media (max-width:420px) fix misses any
+      device or pane wider than 420 CSS px.
+   3. Edit and Delete sit 4px apart. One of them is destructive.
+   ───────────────────────────────────────────────────────────── */
+
+/* Target any touch device, and Obsidian's own mobile class.
+   (hover:none)/(pointer:coarse) is more reliable than guessing width. */
+@media (hover: none), (pointer: coarse) {
+
+  /* 1 — always visible, never hover-gated */
+  .tm-task-actions,
+  .task-actions {
+    opacity: 1 !important;
+    transform: none !important;
+    gap: 10px !important;          /* was 4px — reduces mis-taps */
+  }
+
+  /* 2 — proper touch targets */
+  .tm-action-btn,
+  .task-edit-btn,
+  .task-delete-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+  }
+
+  /* 3 — icons you can actually see */
+  .tm-action-btn svg,
+  .task-edit-btn svg,
+  .task-delete-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+    stroke-width: 2.1;
+  }
+
+  /* 4 — make delete visually distinct so it isn't hit by accident */
+  .task-delete-btn,
+  .tm-action-btn-delete {
+    background: var(--tm-danger-subtle) !important;
+    color: var(--tm-danger) !important;
+    opacity: 0.92;
+  }
+
+  /* 5 — room for the taller buttons in the row */
+  .tm-task-item,
+  .task-item {
+    align-items: center;
+  }
+}
+
+/* Same treatment via Obsidian's mobile body class, as a belt-and-braces
+   fallback for devices that report hover support incorrectly. */
+.is-mobile .tm-task-actions,
+.is-mobile .task-actions {
+  opacity: 1 !important;
+  transform: none !important;
+  gap: 10px !important;
+}
+
+.is-mobile .tm-action-btn,
+.is-mobile .task-edit-btn,
+.is-mobile .task-delete-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+}
+
+.is-mobile .tm-action-btn svg,
+.is-mobile .task-edit-btn svg,
+.is-mobile .task-delete-btn svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Desktop stays as-is, but reveal on focus too so keyboard
+   navigation isn't stuck behind :hover either. */
+.tm-task-item:focus-within .tm-task-actions,
+.task-item:focus-within .task-actions {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Edit-task modal — mobile sizing
+   The modal is now appended to document.body (main.js), so it is
+   no longer clipped by .view-content. These rules just make it
+   behave as a proper bottom sheet on a phone.
+   ───────────────────────────────────────────────────────────── */
+
+.tm-overlay {
+  /* dvh accounts for the phone's address/nav bar; vh does not */
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .tm-modal {
+    max-height: 88dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    /* clear the home-indicator / gesture bar */
+    padding-bottom: calc(28px + env(safe-area-inset-bottom)) !important;
+  }
+
+  /* keep Save/Cancel reachable without scrolling to the bottom */
+  .tm-modal-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--tm-surface);
+    padding-top: 12px;
+    margin-top: 4px;
+    z-index: 2;
+  }
+
+  /* bigger close button, same reason as the row buttons */
+  .tm-modal-close {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
+
+/* ═══════════ Widget ═══════════ */
+
+/* ============================================================
+   WIDGET — homepage card gallery for Dataview tables
+   Full-bleed banner with a translucent title bar overlaid
+   at the bottom. Applied to notes with  cssclasses: widget
+   ============================================================ */
+
+.widget {
+  width: 100%;
+  padding: 8px 0;
+  --pc-card-radius: var(--craft-radius-lg, 16px);
+  /* inner radius = outer minus the 1px border */
+  --pc-inner-radius: calc(var(--craft-radius-lg, 16px) - 1px);
+}
+
+.widget table {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.widget tbody {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 4px 2px 8px;
+}
+
+.widget thead {
+  display: none;
+}
+
+/* --- Card ---------------------------------------------------- */
+.widget tbody tr {
+  display: block;
+  position: relative;
+  height: 190px;
+  border: 1px solid var(--craft-border, var(--background-modifier-border));
+  border-radius: var(--pc-card-radius);
+  overflow: hidden;
+  background: var(--craft-panel, var(--background-secondary));
+  box-shadow: var(--craft-shadow-sm, 0 1px 4px rgba(0, 0, 0, 0.08));
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+  isolation: isolate;
+}
+
+.widget tbody tr:hover {
+  transform: translateY(-3px);
+  border-color: var(--craft-accent, var(--interactive-accent));
+  box-shadow: var(--craft-shadow-md, 0 6px 20px rgba(0, 0, 0, 0.18));
+}
+
+.widget td,
+.widget th {
+  border: none !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+/* --- Banner fills the whole card ----------------------------- */
+.widget tbody tr > td:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.widget tbody tr > td:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  transition: transform 0.35s ease;
+}
+
+.widget tbody tr:hover > td:first-child img {
+  transform: scale(1.05);
+}
+
+/* Scrim so the title stays readable over any photo */
+.widget tbody tr > td:first-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--pc-inner-radius);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.25) 28%,
+    rgba(0, 0, 0, 0) 55%
+  );
+}
+
+/* --- Translucent title bar over the image -------------------- */
+.widget tbody tr > td:last-child {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 12px !important;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-align: center;
+  word-break: break-word;
+  color: #fff !important;
+  background: rgba(20, 20, 22, 0.42) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0 0 var(--pc-inner-radius) var(--pc-inner-radius);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  transition: background-color 0.18s ease;
+}
+
+.widget tbody tr:hover > td:last-child {
+  background: rgba(20, 20, 22, 0.58);
+}
+
+.widget tbody tr > td:last-child a {
+  color: inherit !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+
+/* Make the entire title bar a click target, not just the text */
+.widget tbody tr > td:last-child a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.widget tbody tr:hover > td,
+.widget tbody tr > td:hover {
+  background: none !important;
+}
+
+.widget tbody tr:hover > td:last-child {
+  background: rgba(20, 20, 22, 0.58) !important;
+}
+
+
+/* ═══════════ Theme ═══════════ */
+
+/* Full-width, edge-to-edge layout — scoped to the homepage/dashboard (cssclass: widget)
+   only. Regular notes keep Craft-Style's centered ~720px Notion column. */
+.widget.markdown-source-view.mod-cm6,
+.widget.markdown-preview-view,
+.widget.markdown-source-view.mod-cm6 .cm-content,
+.widget.markdown-preview-view .markdown-preview-sizer,
+.widget.markdown-preview-view .markdown-preview-section,
+.widget.markdown-source-view.mod-cm6 .cm-line {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 2px !important;
+    margin: 0 !important;
+    padding-bottom: 50px !important;
+}
+
+/* Remove line width constraints — homepage only */
+.widget.markdown-source-view.mod-cm6.is-line-width-constrained .cm-line,
+.widget.markdown-preview-view.is-line-width-constrained .markdown-preview-section,
+.widget.markdown-preview-view.is-readable-line-width .markdown-preview-sizer,
+.widget.markdown-source-view.mod-cm6.is-readable-line-width .cm-content {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Remove any additional width constraints — homepage only */
+.widget.is-readable-line-width .markdown-preview-section,
+.widget.is-readable-line-width.markdown-source-view {
+    --file-line-width: 100% !important;
+    --line-width-adaptive: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Handle embedded content */
+.markdown-embed-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Ensure gutter alignment */
+.markdown-source-view.mod-cm6 .cm-gutters {
+    left: 0 !important;
+}
+
+
+/* Keep inline title visible in editing mode */
+.inline-title {
+    display: block !important;
+}
+
+
+/* Hide the properties block inside notes, in every mode (editing,
+   reading, embeds and hover previews). Properties are shown in the
+   File properties sidebar panel instead. Lives in this snippet, not in
+   a plugin, so it applies from the first frame and never flashes. */
+.workspace-leaf-content[data-type="markdown"] .metadata-container,
+.markdown-embed .metadata-container,
+.hover-popover .metadata-container {
+    display: none !important;
+}
+
+.markdown-rendered .internal-link {
+    text-decoration-line: none;
+}
+
+.markdown-rendered .internal-link:hover {
+    text-decoration-line: none;
+}
+/* Optional: Add a banner image */
+
+/* notetoolbar customization */
+.callout[data-callout="note-toolbar"] {
+    height: 40px ;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Hide all elements in view-header except .view-action */
+
+
+/* Remove background, padding, and borders from view-header */
+.view-header {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 42px !important;
+    display: flex !important;
+    width: 100% !important;
+    position: relative !important;
+
+}
+
+.view-header-left {
+    width: 100% !important;
+}
+
+.view-header-nav-buttons {
+    justify-content: space-between;
+    width: 100% !important;
+    z-index: 100;
+}
+
+.view-header-title-container {
+    width: 100% !important;
+    position: fixed !important;
+    height: 42px;
+    display: inline-flex;
+}
+
+
+.something .mb-input-textarea {
+   min-width: 100%;
+   border-radius: 10px;
+   padding: 10px;
+   position: relative;
+   margin-top: 10px;
+}
+
+
+.workspace-tab-header-status-icon .mod-pinned {
+    display: none;
+}
+
+/* hide the notice */
+div.notice {
+    display: none !important;
+}
+
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Remove strikethrough from completed tasks */
+.markdown-preview-view .task-list-item.is-checked .task-list-item-text,
+.markdown-source-view.mod-cm6 .task-list-item.is-checked .task-list-item-text,
+.markdown-rendered .task-list-item.is-checked .task-list-item-text {
+    text-decoration: none !important;
+    color: inherit !important;
+    opacity: 1 !important;
+}
+
+/* Optional: If you want to keep some visual distinction, you can use a subtle opacity */
+.markdown-preview-view .task-list-item.is-checked,
+.markdown-source-view.mod-cm6 .task-list-item.is-checked,
+.markdown-rendered .task-list-item.is-checked {
+    opacity: 0.8;
+}
+
+/* Remove strikethrough from checked items */
+.contains-task-list .task-list-item[data-task="x"],
+.contains-task-list .task-list-item[data-task="X"],
+.markdown-preview-view ul > li.task-list-item.is-checked,
+.markdown-source-view ul > li.task-list-item.is-checked {
+    text-decoration: none !important;
+    color: var(--text-normal) !important;
+}
+
+/* Remove strikethrough from the text specifically */
+.contains-task-list .task-list-item[data-task="x"] .task-list-item-text,
+.contains-task-list .task-list-item[data-task="X"] .task-list-item-text,
+.markdown-preview-view ul > li.task-list-item.is-checked .task-list-item-text,
+.markdown-source-view ul > li.task-list-item.is-checked .task-list-item-text {
+    text-decoration: none !important;
+    color: var(--text-normal) !important;
+}
+
+/* Optional: Add subtle visual distinction without strikethrough */
+.contains-task-list .task-list-item[data-task="x"],
+.contains-task-list .task-list-item[data-task="X"] {
+    opacity: 0.8;
+}
+
+
+
+.workspace-tab-header-status-icon, .workspace-tab-header-inner-close-button {
+    display: none;
+}
+
+.inline-title {
+    display: none !important;
+}
+
+
+
+/* ============================================================
+   MOBILE — edge-to-edge banner under the status bar
+   ============================================================ */
+
+/* ============================================================
+   NAVBAR — hide back / forward only
+
+   Written carefully, because the previous attempt at this hid the menu
+   button too. The rule was `.mobile-navbar-action:has(svg.lucide-home)`
+   and `:has()` matches a descendant at ANY depth — Obsidian's ribbon
+   cluster contains those icons nested inside it, so the whole cluster
+   disappeared.
+
+   Two defences here:
+     · the aria-label rules match the button itself, with no descendant
+       traversal at all — they cannot over-match
+     · the icon rules use `:has(> svg)`, a DIRECT child, so a cluster
+       containing an arrow deeper inside is not affected
+
+   Nothing else in this file touches .mobile-navbar.
+   ============================================================ */
+
+/* ANDROID ONLY — see the note at the foot of this block.
+
+   Everything I do to the navbar is scoped to body.is-android, because
+   on iOS the same rules produced a full-width glass band floating in
+   the middle of the screen instead of a pill at the bottom. Two likely
+   reasons, neither confirmed: the element carrying the pill may be a
+   child of .mobile-navbar on iOS rather than .mobile-navbar itself
+   (so the glass paints the full-width container), and `position: fixed`
+   resolves against a transformed ancestor there, which would explain it
+   sitting mid-screen rather than at the bottom.
+
+   Rather than guess at iOS internals blind, iOS keeps Obsidian's stock
+   navbar until I can see what its DOM actually looks like.
+   body.is-android / body.is-ios are Obsidian's own classes.
+
+   Push the bar to the right edge instead of centred.
+
+   Obsidian centres the floating navbar, but I can't see which mechanism
+   it uses — auto margins or left+transform — so both are overridden.
+   Whichever one is in play, the other is harmless. Vertical position is
+   left alone. */
+body.is-android .mobile-navbar {
+  left: auto !important;
+  right: 14px !important;
+  transform: none !important;
+  /* If the bar is a flex item of its row, `width: fit-content` loses to
+     the flex basis and it stays full width — which is what would leave
+     it running under the home button. These two make the shrink stick
+     either way; they're inert if it isn't a flex item. */
+  flex: 0 0 auto !important;
+  align-self: flex-end !important;
+  margin-left: auto !important;
+  /* was also margin-right: 10px, which stacked on top of `right: 10px`
+     and made the gap 20px — twice the home button's. One offset only. */
+  margin-right: 0 !important;
+}
+
+/* The rectangle behind the pill.
+
+   The navbar is a rounded pill, but something in the chain above it
+   paints a solid rectangle, so you see a black box with a pill sitting
+   inside it. My first two attempts cleared the direct parent and then
+   the grandparent — both guessed at which level was responsible.
+
+   This clears every ancestor between the navbar and the app container,
+   whichever one is actually doing it. `.app-container *` scopes it, so
+   body, html and the app container itself are out of reach and the
+   app's own background can't be stripped. The pill keeps its own
+   background because the navbar is not matched — only its ancestors. */
+body.is-mobile.is-android .app-container *:has(.mobile-navbar) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* The black strip at the bottom — this is the actual problem.
+
+   The note text stops at a hard line and a dead black band sits below
+   it. That band is not a background behind the pill: it is reserved
+   layout space. The navbar is sitting in normal flow, so its row takes
+   real height away from the note, and the text is clipped at the top of
+   it instead of scrolling underneath.
+
+   Two parts:
+     · pin the navbar itself, so it floats over the note
+     · collapse the row it used to occupy, so the note gets that height
+       back and scrolls behind the pill
+
+   `.app-container *` plus the :not() guards keep this off the workspace
+   containers — only the navbar's own wrapper collapses. The clearance
+   at the end of a note comes from the .view-content padding-bottom
+   further down this file, not from this reserved row. */
+body.is-mobile.is-android .mobile-navbar {
+  position: fixed !important;
+  bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+  z-index: 40 !important;
+}
+
+body.is-mobile.is-android .app-container *:has(> .mobile-navbar):not(.workspace):not(.workspace-split):not(.workspace-drawer) {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+/* The pill — frosted glass.
+
+   Not a flat tint: a translucent fill plus a real backdrop blur, so
+   whatever scrolls under it stays legible as a soft smear rather than
+   readable text. The hairline border and the inset highlight along the
+   top edge are what sell it as glass instead of grey plastic — without
+   them the blur alone just looks like fog.
+
+   backdrop-filter is duplicated with the -webkit- prefix because
+   Obsidian mobile is a WebView. If a build ever lacks support the
+   @supports block below swaps in an opaque fill, since a transparent
+   pill with no blur would leave the icons sitting on raw text. */
+body.is-mobile.is-android .mobile-navbar {
+  background: rgba(255, 255, 255, .07) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, .12) !important;
+  border-radius: 999px !important;
+  box-shadow:
+    0 8px 28px -6px rgba(0, 0, 0, .55),
+    inset 0 1px 0 rgba(255, 255, 255, .14) !important;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body.is-mobile.is-android .mobile-navbar {
+    background: rgba(28, 28, 28, .92) !important;
+  }
+}
+
+/* ── NOTCHED DOCK (Android) ───────────────────────────────────────
+   Full-width bar with a semicircular bite taken out of the top centre,
+   and the home button sitting in that bite — the shape from the mockup.
+
+   This deliberately reverses the right-aligned pill above. A centre
+   notch only reads as a notch if the bar spans the width, so the
+   left/right/margin rules further up are overridden here rather than
+   deleted, in case you want the pill back.
+
+   The bite is a mask, not a drawn shape: a radial-gradient where the
+   centre circle is transparent and everything outside it is opaque, so
+   the bar's own background is simply absent there. Nothing is painted
+   over the note behind it.
+
+   Caution: a mask applies to the element's children too. With four
+   navbar icons they sit two either side of centre and clear the bite —
+   but if a fifth is ever added, one may get clipped. */
+body.is-mobile.is-android .mobile-navbar {
+  /* Inset from all three edges, not full-bleed.
+
+     The mockup's bar floats: it is narrower than the screen and sits
+     above the bottom edge, which is what makes it read as a dock rather
+     than a system bar. The first attempt pinned it to 0/0 and let it run
+     to the bottom, so it looked like part of the OS and the right end
+     disappeared off-screen. */
+  left: 14px !important;
+  right: 14px !important;
+  width: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+
+  /* Fully rounded, because every edge is now visible. */
+  border-radius: 999px !important;
+  padding-bottom: 0 !important;
+
+  /* circle radius 40px centred on the bar's top edge; the 1px band
+     between the two stops keeps the arc from looking jagged */
+  /* The bite. 38px against a 64px button leaves a 6px ring of bar
+     visible around it — in the mockup the gap is small and even, which
+     is what stops it looking like the button is simply sitting on top. */
+  -webkit-mask-image: radial-gradient(circle 38px at 50% 0, transparent 0 37px, #000 38px);
+  mask-image: radial-gradient(circle 38px at 50% 0, transparent 0 37px, #000 38px);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* The home button moves to the centre and rides the notch.
+
+   Done entirely from here — the plugin is untouched. It only has to put
+   the button on screen; where the button goes is this file's business.
+
+   `left: 50%` plus a translate is what centres it; the translate has to
+   be repeated in :active below, because transform is a single property
+   and a bare scale() there would throw the centring away.
+
+   The vertical position needs `!important` because the plugin writes an
+   inline `bottom` from its own measurement, and an inline style beats a
+   normal rule. This overrides it rather than changing the plugin.
+
+   --rb-dock-h is the navbar's height. 64px is an estimate; if the
+   button sits too high or too low against the bar, that one number is
+   the thing to change. Subtracting half the button's height (32px of
+   64px) puts its centre exactly on the bar's top edge. */
+body.is-mobile.is-android {
+  --rb-dock-h: 64px;
+}
+
+body.is-mobile.is-android .rb-home {
+  left: 50% !important;
+  right: auto !important;
+  bottom: calc(var(--rb-dock-h) + env(safe-area-inset-bottom, 0px) - 32px) !important;
+  transform: translateX(-50%);
+  z-index: 46;
+}
+body.is-mobile.is-android .rb-home:active {
+  transform: translateX(-50%) scale(.88);
+}
+
+/* Dock out of the way while a sidebar drawer is open.
+
+   The drawer slides over the note but the dock is fixed on top of it,
+   so it floated over the file list and clipped the vault name at the
+   bottom. The home button already hid itself here; this gives the dock
+   the same behaviour.
+
+   `rb-drawer-open` is set on <body> by the homepage plugin, off
+   Obsidian's own leftSplit/rightSplit collapsed state — the same check
+   alignHome() already ran. Doing it from the API rather than guessing a
+   CSS hook means it can't drift if Obsidian renames a class. */
+body.is-mobile.is-android.rb-drawer-open .mobile-navbar {
+  display: none !important;
+}
+
+/* ── iOS ──────────────────────────────────────────────────────────
+   iOS doesn't give you a pill at all: stock, the navbar is a flat
+   full-width bar across the bottom. So the Android rules had nothing
+   to work with, and collapsing the navbar's wrapper to zero height is
+   what threw it into the middle of the screen — on iOS that wrapper is
+   holding the bar in normal flow at the bottom, it isn't dead space.
+
+   Same look, different route. The bar stays exactly where Obsidian puts
+   it (no position or wrapper games at all); it's only shrunk to its
+   contents and pushed right, which turns the bar into a pill without
+   touching layout. */
+body.is-mobile.is-ios .mobile-navbar {
+  /* fit-content keeps not taking on this WebView — the bar is still
+     drawing full width — so there's a hard cap as well. 330px is the
+     five icons plus their padding, measured off the screenshot rather
+     than computed, which is the weak part of this: add or remove a
+     navbar button and the pill will be the wrong width.
+
+     The cap is what actually right-aligns it: with margin-left auto,
+     a capped width settles against the right edge no matter whether the
+     bar is laid out as a flex item or positioned. */
+  width: -webkit-fit-content !important;
+  width: fit-content !important;
+  max-width: 330px !important;
+  margin-left: auto !important;
+  margin-right: 14px !important;
+  /* Obsidian centres the bar with a translate. Once the element is
+     shrunk to its contents, that leftover transform shoves the pill off
+     the right edge — it's offsetting half of the width the bar used to
+     have. The equivalent reset for Android lives in the block above;
+     this is the same fix, it just has to be repeated here because that
+     block is scoped to is-android. */
+  transform: none !important;
+
+  background: color-mix(in srgb, var(--background-primary) 55%, transparent) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+  border: 1px solid color-mix(in srgb, var(--text-normal) 12%, transparent) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 8px 28px -6px rgba(0, 0, 0, .28) !important;
+}
+
+/* The glass tint is taken from --background-primary rather than a fixed
+   white, because you run light on the iPhone and dark on the Android —
+   a hardcoded rgba(255,255,255,.07) would vanish on one of them. */
+@supports not (background: color-mix(in srgb, red 50%, transparent)) {
+  body.is-mobile.is-ios .mobile-navbar {
+    background: var(--background-primary) !important;
+  }
+}
+
+/* Hide the arrows wherever the icon sits inside the button. `> svg`
+   was too strict — the icon is wrapped, so the direct-child version
+   matched nothing at all. */
+.mobile-navbar-action[aria-label="Navigate back"],
+.mobile-navbar-action[aria-label="Navigate forward"],
+.mobile-navbar-action:has(svg.lucide-arrow-left),
+.mobile-navbar-action:has(svg.lucide-arrow-right),
+.mobile-navbar-action:has(svg.lucide-chevron-left),
+.mobile-navbar-action:has(svg.lucide-chevron-right) {
+  display: none !important;
+}
+
+/* ...then put back anything that is actually the ribbon cluster or the
+   menu. This is the guard the previous version lacked: those buttons
+   contain arrow icons nested inside them, so the rule above catches
+   them, and this re-shows them. Later rule, equal specificity, so it
+   wins. */
+.mobile-navbar-action:has(svg.lucide-menu),
+.mobile-navbar-action:has(svg.lucide-more-horizontal),
+.mobile-navbar-action:has(svg.lucide-home),
+.mobile-navbar-action:has(svg.lucide-house),
+.mobile-navbar-action:has(svg.lucide-chevrons-up-down),
+.mobile-navbar-action:has(svg.lucide-plus),
+.mobile-navbar-action:has(svg.lucide-search) {
+  display: flex !important;
+}
+
+.is-mobile {
+  --status-strip: var(--safe-area-inset-top, env(safe-area-inset-top, 24px));
+}
+
+/* Drop the app's top inset so content can reach y = 0 */
+.is-mobile .app-container {
+  padding-top: 0 !important;
+}
+
+/* The header strip above the banner.
+   Was height: 0 — which left the per-note actions (the bookmark button)
+   with nowhere to render. It now keeps a real height, sits above the
+   banner, and stays transparent so the banner still reads edge-to-edge. */
+.is-mobile .view-header {
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border-bottom: none !important;
+  background: transparent !important;
+  position: absolute !important;
+  top: var(--status-strip);
+  /* cleared to the left of the plugin's floating forward button */
+  right: 52px;
+  left: auto;
+  width: auto !important;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* ============================================================
+   LAYOUT RULES BELONG HERE, NOT IN THE PLUGIN
+
+   These used to live in the plugin's stylesheet, keyed on a class it
+   added at load. That meant the note was laid out one way for the first
+   second and another way afterwards, and you could watch the content
+   jump when the plugin arrived.
+
+   Snippets load with the app. Anything that affects layout goes here so
+   the first frame and the settled frame are identical. The plugin's own
+   stylesheet is now only for elements the plugin itself creates — all
+   absolutely positioned, so they fade in without moving anything.
+   ============================================================ */
+
+/* The header is gone on mobile: the plugin floats back, forward and the
+   bookmark over the note instead, and the title is already in the
+   banner. Hidden from frame one so nothing reflows later. */
+.is-mobile .view-header,
+.is-mobile .view-header-title-container,
+.is-mobile .view-header-left {
+  display: none !important;
+}
+
+/* Obsidian's own bookmark and edit/preview actions — the plugin
+   replaces both with floating buttons. Matched on the icon so this
+   holds in any UI language. */
+.is-mobile .view-actions > .clickable-icon:has(svg.lucide-bookmark),
+.is-mobile .view-actions > .clickable-icon:has(svg.lucide-bookmark-minus),
+.is-mobile .view-actions > .clickable-icon:has(svg.lucide-bookmark-check),
+.is-mobile .view-actions > .clickable-icon:has(svg.lucide-pencil),
+.is-mobile .view-actions > .clickable-icon:has(svg.lucide-book-open) {
+  display: none !important;
+}
+
+.is-mobile .workspace-split.mod-root .workspace-leaf-content > .view-content {
+  padding-top: 0 !important;
+  /* No bottom clearance. The dock is glass now, so the last lines of a
+     note passing under it is the intended look rather than a defect —
+     the trade is that the very last line needs a small extra scroll to
+     clear the icons. */
+  padding-bottom: 0 !important;
+}
+
+/* Banner grows upward to cover the status-bar strip */
+.is-mobile .obsidian-banner,
+.is-mobile .obsidian-banner-spacer {
+  height: calc(var(--banner-height) + var(--status-strip)) !important;
+}
+
+/* Keep the banner icon below the status bar */
+.is-mobile .obsidian-banner-icon {
+  margin-top: var(--status-strip);
+}
+
+/* Notes with no banner keep clear of the status bar */
+.is-mobile .markdown-reading-view:not(:has(.obsidian-banner)) .markdown-preview-sizer,
+.is-mobile .markdown-source-view:not(:has(.obsidian-banner)) .cm-sizer {
+  padding-top: calc(var(--status-strip) + 10px) !important;
+}
+
+
+/* ============================================================
+   DESKTOP — drop the note header's duplicate controls
+   Back, forward, bookmark, edit/reading and the ⋯ menu are covered
+   by the floating buttons (or right-click / command palette), so the
+   header keeps just the breadcrumb title. Markdown views only.
+   ============================================================ */
+
+body:not(.is-mobile) .workspace-leaf-content[data-type="markdown"] .view-header-nav-buttons,
+body:not(.is-mobile) .workspace-leaf-content[data-type="markdown"] .view-actions {
+  display: none !important;
+}
+
+
+
+/* ============================================================
+   ALL MAIN-PANE VIEWS (desktop) — translucent accent title bar
+   Same recipe as the Home view: the header floats over the content,
+   so the page scrolls underneath a blurred, accent-tinted bar.
+   Sidebars keep their normal headers.
+   ============================================================ */
+body:not(.is-mobile) .mod-root .workspace-leaf-content > .view-header {
+  position: absolute !important;
+  top: 0; left: 0; right: 0;
+  width: 100% !important;
+  height: 40px !important;
+  margin: 0 !important;
+  z-index: 20;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: color-mix(in srgb, var(--interactive-accent) 28%, transparent) !important;
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+}
+body:not(.is-mobile) .mod-root .workspace-leaf-content > .view-content {
+  height: 100%;
+}
+/* keep the first line of a note clear of the bar when scrolled to the top */
+body:not(.is-mobile) .mod-root .markdown-preview-sizer,
+body:not(.is-mobile) .mod-root .cm-sizer {
+  padding-top: 40px;
+}
+
+/* Main-pane title bar: centre the title (breadcrumb + name) */
+body:not(.is-mobile) .mod-root .workspace-leaf-content > .view-header .view-header-title-container {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 !important;
+  pointer-events: none;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+}
+body:not(.is-mobile) .mod-root .workspace-leaf-content > .view-header .view-header-title-container > * {
+  pointer-events: auto;
+  flex: 0 0 auto;
+  width: auto !important;
+}
+body:not(.is-mobile) .mod-root .workspace-leaf-content > .view-header .view-header-title {
+  text-align: center;
+  line-height: 40px;
+}
+
+/* Main-pane back / forward (and top-row bookmark): live inside the title
+   bar as small rounded rectangles instead of floating circles. */
+body:not(.is-mobile) .mod-root .rb-ovl { z-index: 30; }
+
+body:not(.is-mobile) .mod-root .rb-back,
+body:not(.is-mobile) .mod-root .rb-fwd,
+body:not(.is-mobile) .mod-root .rb-bm-btn:not(.is-on-banner) {
+  top: 4px !important;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  color: var(--text-normal);
+}
+body:not(.is-mobile) .mod-root .rb-back { left: 8px !important; }
+body:not(.is-mobile) .mod-root .rb-fwd  { right: 8px !important; }
+body:not(.is-mobile) .mod-root .rb-bm-btn:not(.is-on-banner) { right: 44px !important; }
+
+body:not(.is-mobile) .mod-root .rb-back:hover,
+body:not(.is-mobile) .mod-root .rb-fwd:hover,
+body:not(.is-mobile) .mod-root .rb-bm-btn:not(.is-on-banner):hover {
+  background: color-mix(in srgb, var(--text-normal) 14%, transparent);
+}
+body:not(.is-mobile) .mod-root .rb-back svg,
+body:not(.is-mobile) .mod-root .rb-fwd svg { width: 18px; height: 18px; }
+
+
+/* Sidebar pane headers (Graph view, Tasks, File properties…): drop the
+   arrows, sort and ⋯ buttons — just the title, centred. */
+body:not(.is-mobile) :is(.mod-left-split, .mod-right-split) .workspace-leaf-content > .view-header {
+  justify-content: center !important;
+}
+body:not(.is-mobile) :is(.mod-left-split, .mod-right-split) .workspace-leaf-content > .view-header .view-header-left,
+body:not(.is-mobile) :is(.mod-left-split, .mod-right-split) .workspace-leaf-content > .view-header .view-header-nav-buttons,
+body:not(.is-mobile) :is(.mod-left-split, .mod-right-split) .workspace-leaf-content > .view-header .view-actions {
+  display: none !important;
+}
+body:not(.is-mobile) :is(.mod-left-split, .mod-right-split) .workspace-leaf-content > .view-header .view-header-title-container {
+  position: static !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+}
+body:not(.is-mobile) :is(.mod-left-split, .mod-right-split) .workspace-leaf-content > .view-header .view-header-title-container > * {
+  width: auto !important;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+
+
+/* ── NOTCHED DOCK v2 (Android) — 2026-11-04 ──────────────────────
+   v1 didn't read as a notch: the bar was see-through glass (so the
+   bite was invisible), the cut had hard corners, and the tabs icon
+   sat under the home button. Now:
+     · solid bar, so the cut-out actually shows
+     · smooth curved notch (SVG mask, like the mockup)
+     · fixed 64px height so the button centres exactly on the top edge
+     · a gap in the middle so no icon sits under the button */
+body.is-mobile.is-android .mobile-navbar {
+  height: 64px !important;
+  min-height: 64px !important;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+  border-radius: 26px !important;
+  border: none !important;
+  background: color-mix(in srgb, var(--background-secondary) 96%, var(--text-normal)) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-evenly !important;
+
+  /* three mask layers, added together: solid left, curved notch
+     (200px wide, centred), solid right */
+  --rb-notch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Cpath d='M0 0H44C58 0 62 6 66 14C74 32 86 42 100 42C114 42 126 32 134 14C138 6 142 0 156 0H200V120H0Z'/%3E%3C/svg%3E");
+  -webkit-mask-image: linear-gradient(#000,#000), var(--rb-notch), linear-gradient(#000,#000) !important;
+  mask-image: linear-gradient(#000,#000), var(--rb-notch), linear-gradient(#000,#000) !important;
+  -webkit-mask-position: left top, center top, right top !important;
+  mask-position: left top, center top, right top !important;
+  -webkit-mask-size: calc(50% - 99px) 100%, 200px 120px, calc(50% - 99px) 100% !important;
+  mask-size: calc(50% - 99px) 100%, 200px 120px, calc(50% - 99px) 100% !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+}
+body.is-mobile.is-android .mobile-navbar-actions {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-evenly !important;
+}
+/* gap in the middle for the home button: push the 2nd visible icon left */
+body.is-mobile.is-android .mobile-navbar-action:nth-child(2 of .mobile-navbar-action:not([aria-label="Navigate back"]):not([aria-label="Navigate forward"])) {
+  margin-right: 84px !important;
+}
+
+/* home button: centre on the bar's top edge (10 + 64 − 32 = 42px) */
+body.is-mobile.is-android .rb-home {
+  bottom: calc(42px + env(safe-area-inset-bottom, 0px)) !important;
+  background: var(--interactive-accent) !important;
+  color: var(--text-on-accent) !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 6px 18px -4px rgba(0,0,0,.5) !important;
+}
+
+/* v2 fix: Obsidian caps the navbar's width, so with left:14px it stuck
+   to the left and the notch (centred on the bar) missed the home button
+   (centred on the screen). Force the bar to span the screen so both
+   share the same centre. */
+body.is-mobile.is-android .mobile-navbar {
+  position: fixed !important;
+  left: 14px !important;
+  right: 14px !important;
+  width: calc(100vw - 28px) !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  flex: none !important;
+  align-self: auto !important;
+}
+body.is-mobile.is-android .rb-home {
+  left: 50vw !important;
+  right: auto !important;
+}
+
+/* v2: translucency back — frosted glass, same as before, notch kept.
+   The tint is a touch stronger than the old .07 so the cut-out still
+   reads against the page behind it. */
+body.is-mobile.is-android .mobile-navbar {
+  background: rgba(255, 255, 255, .10) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+body.is-mobile.is-android .rb-home {
+  background: color-mix(in srgb, var(--interactive-accent) 55%, transparent) !important;
+  backdrop-filter: blur(22px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+}
+
+/* v2: icons in two tight pairs at the outer ends — search + on the
+   left, tabs ☰ on the right — so nothing runs into the notch.
+   Replaces the centre-gap margin above. */
+body.is-mobile.is-android .mobile-navbar,
+body.is-mobile.is-android .mobile-navbar-actions {
+  justify-content: flex-start !important;
+  gap: 10px !important;
+}
+body.is-mobile.is-android .mobile-navbar {
+  padding: 0 18px !important;
+}
+body.is-mobile.is-android .mobile-navbar-action {
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+}
+body.is-mobile.is-android .mobile-navbar-action:nth-child(2 of .mobile-navbar-action:not([aria-label="Navigate back"]):not([aria-label="Navigate forward"])) {
+  margin-right: auto !important;
+}
+
+/* v2 fix: the "2nd visible icon" selector missed (it counted a hidden
+   button), so nothing pushed the pairs apart. Target the + by its icon
+   instead, and make sure the row spans the whole bar. */
+body.is-mobile.is-android .mobile-navbar-action:nth-child(2 of .mobile-navbar-action:not([aria-label="Navigate back"]):not([aria-label="Navigate forward"])) {
+  margin-right: 0 !important;
+}
+body.is-mobile.is-android .mobile-navbar-actions {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+}
+body.is-mobile.is-android .mobile-navbar-action:has(svg.lucide-plus) {
+  margin-right: auto !important;
+}
+
+/* Home button: centre with `left` alone, no translateX.
+   The plugin's entrance animation (rb-home-pop) animates `transform`,
+   which wiped out translateX(-50%) while it played — so the button
+   popped in 32px right of centre and snapped back when it finished.
+   50vw minus half the 64px button needs no transform at all. */
+body.is-mobile.is-android .rb-home {
+  left: calc(50vw - 32px) !important;
+  transform: none;
+}
+body.is-mobile.is-android .rb-home:active {
+  transform: scale(.88);
+}
+
+/* home button follows the dock when it hides on scroll */
+body.is-mobile.is-android .rb-home {
+  transition: translate .25s ease, opacity .2s ease;
+}
+body.is-mobile.is-android .rb-home.rb-dock-gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* hide = shrink away, show = pop back with a little overshoot.
+   Uses the `scale` property so it doesn't fight transform/translate. */
+body.is-mobile.is-android .rb-home {
+  transition: translate .25s ease, opacity .18s ease, scale .32s cubic-bezier(.34, 1.56, .64, 1);
+  scale: 1;
+}
+body.is-mobile.is-android .rb-home.rb-dock-gone {
+  scale: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: translate .25s ease, opacity .18s ease .05s, scale .2s ease-in;
+}
+
+/* Phone: remove the extra header gap above views (Obsidian default:
+   safe-area + view-header-height + 8px). Keep only the status-bar inset. */
+body.is-phone.is-floating-nav,
+body.is-phone.auto-full-screen {
+  --view-top-spacing: calc(var(--safe-area-inset-top));
+}
+
+
+/* ── mobile sidebars: tab row instead of the view dropdown ───────────── */
+body.is-mobile .workspace-drawer-tab-options .workspace-drawer-tab-select { display: none !important; }
+body.is-mobile .workspace-drawer-tab-options { margin: 0 12px 6px !important; }
+body.is-mobile .workspace-drawer-tab-options .workspace-drawer-tab-options-list {
+  position: static !important;
+  opacity: 1 !important; pointer-events: auto !important; transform: none !important;
+  height: auto !important; max-height: none !important; overflow: visible !important; width: 100%;
+  transition: none !important;
+  display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
+  gap: 4px; padding: 4px !important; margin: 0 !important;
+  border-radius: 14px; box-shadow: none !important;
+  background: var(--background-modifier-hover) !important;
+}
+body.is-mobile .workspace-drawer-tab-options-list .workspace-tab-header {
+  flex: 1 1 0; min-width: 0; height: 40px; margin: 0 !important; padding: 0 !important;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px; background: none; color: var(--text-muted);
+}
+body.is-mobile .workspace-drawer-tab-options-list .workspace-tab-header-inner {
+  padding: 0 !important; margin: 0 !important; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center; background: none !important;
+}
+body.is-mobile .workspace-drawer-tab-options-list .workspace-tab-header-inner-title,
+body.is-mobile .workspace-drawer-tab-options-list .workspace-tab-header-inner-chevron { display: none !important; }
+body.is-mobile .workspace-drawer-tab-options-list .workspace-tab-header-inner-icon { margin: 0 !important; display: flex; }
+body.is-mobile .workspace-drawer-tab-options-list .workspace-tab-header-inner-icon svg { width: 20px; height: 20px; }
+body.is-mobile .workspace-drawer-tab-options-list .workspace-tab-header.is-active {
+  background: var(--background-primary); color: var(--text-normal);
+  box-shadow: 0 1px 3px rgba(0,0,0,.18);
+}
+
+/* no dead space between a sidebar view and the tab row */
+body.is-mobile .workspace-drawer .workspace-drawer-active-tab-content .view-content { padding-bottom: 0 !important; }
+
